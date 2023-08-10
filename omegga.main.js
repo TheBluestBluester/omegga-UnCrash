@@ -13,17 +13,11 @@ module.exports = class Plugin {
 			console.errorArray.push(Array.from(arguments));
 			console.defError.apply(console, arguments);
 		}
-		//process.on('uncaughtException', (err, origin) => {
-			//console.log("test");
-		//});
 	}
 	
 	async tick() {
 		if(console.errorArray.length > 0) {
-			//console.log(console.errorArray);
 			const error = console.errorArray[1];
-			//const test = error.match(``);
-			//console.log(test);
 			console.errorArray = [];
 			recentlyCrashed = true;
 		}
@@ -53,11 +47,8 @@ module.exports = class Plugin {
 	}
 	
 	async stop() {
-		//process.removeAllListeners('uncaughtException');
-		//process.removeListener("unhandledRejection");
 		console.error = console.defError;
 		delete console.defError;
 		this.omegga.removeAllListeners('plugin:status');
-		//clearInterval(checkInterval);
 	}
 }
