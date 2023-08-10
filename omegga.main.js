@@ -1,6 +1,9 @@
 let checkInterval;
 let recentlyCrashed = false;
 
+//let plListener;
+let plTimeout;
+
 module.exports = class Plugin {
 	
 	constructor(omegga, config, store) {
@@ -24,7 +27,7 @@ module.exports = class Plugin {
 	}
 	
 	async handleCrash(status, recent) {
-		//console.log(status, recent);
+		try{
 		if(!status.isLoaded && status.isEnabled && recent) {
 			recentlyCrashed = false;
 			this.omegga.broadcast('<b>' + status.name + ' has crashed. Reloading in a few seconds...</>');
@@ -34,6 +37,7 @@ module.exports = class Plugin {
 				this.omegga.broadcast('<b>Failed to reload plugin.</>');
 			}
 		}
+		}catch(e){this.omegga.broadcast('<b>Failed to reload plugin.</>')}
 	}
 	
 	async init() {
@@ -42,13 +46,15 @@ module.exports = class Plugin {
 			if(status.name == "UnCrash") {
 				return;
 			}
-			setTimeout(() => this.handleCrash(status, recentlyCrashed), 400);
+			plTimeout = setTimeout(() => this.handleCrash(status, recentlyCrashed), 400);
 		});
 	}
 	
 	async stop() {
 		console.error = console.defError;
 		delete console.defError;
-		this.omegga.removeAllListeners('plugin:status');
+		//this.omegga.off('UnCrash');
+		clearInterval(checkInterval);
+		clearTimeout(plTimeout);
 	}
 }
