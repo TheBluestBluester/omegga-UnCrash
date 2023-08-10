@@ -54,6 +54,7 @@ module.exports = class Plugin {
 		console.error = console.defError;
 		delete console.defError;
 		//this.omegga.off('UnCrash');
+		this.omegga.removeAllListeners("plugin:status");
 		clearInterval(checkInterval);
 		clearTimeout(plTimeout);
 	}
