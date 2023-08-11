@@ -32,11 +32,18 @@ module.exports = class Plugin {
 			this.omegga.broadcast('<b>' + status.name + ' has crashed. Reloading in a few seconds...</>');
 			const plug = this.omegga.pluginLoader.plugins.find(p => p.shortPath == status.name);
 			const success = await plug.load();
-			if(!success) {
+			if(success) {
+				this.omegga.broadcast('<b>Plugin succesfully reloaded.</>');
+				console.log("Plugin succesfully reloaded.");
+			}
+			else {
 				this.omegga.broadcast('<b>Failed to reload plugin.</>');
 			}
 		}
-		}catch(e){this.omegga.broadcast('<b>Failed to reload plugin.</>')}
+		}catch(e){
+			this.omegga.broadcast('<b>Failed to reload plugin.</>')
+			console.log(e);
+		}
 	}
 	
 	async init() {
