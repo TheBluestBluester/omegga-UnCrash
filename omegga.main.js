@@ -1,7 +1,6 @@
 let checkInterval;
 let recentlyCrashed = false;
 
-//let plListener;
 let plTimeout;
 
 module.exports = class Plugin {
@@ -41,20 +40,20 @@ module.exports = class Plugin {
 	}
 	
 	async init() {
-		checkInterval = setInterval(() => this.tick(), 100);
-		this.omegga.on('plugin:status', (plugin, status) => {
+		this.plCheck = (plugin, status) => {
 			if(status.name == "UnCrash") {
 				return;
 			}
 			plTimeout = setTimeout(() => this.handleCrash(status, recentlyCrashed), 400);
-		});
+		}
+		checkInterval = setInterval(() => this.tick(), 100);
+		this.omegga.on('plugin:status', (plugin, status) => this.plCheck(plugin, status));
 	}
 	
 	async stop() {
 		console.error = console.defError;
 		delete console.defError;
-		//this.omegga.off('UnCrash');
-		this.omegga.removeAllListeners("plugin:status");
+		this.omegga.off('plugin:status', this.plCheck);
 		clearInterval(checkInterval);
 		clearTimeout(plTimeout);
 	}
