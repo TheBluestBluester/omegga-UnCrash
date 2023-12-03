@@ -40,6 +40,9 @@ module.exports = class Plugin {
 				this.omegga.broadcast('<b>Failed to reload plugin.</>');
 			}
 		}
+		else if(recent){
+			recentlyCrashed = false;
+		}
 		}catch(e){
 			this.omegga.broadcast('<b>Failed to reload plugin.</>')
 			console.log(e);
